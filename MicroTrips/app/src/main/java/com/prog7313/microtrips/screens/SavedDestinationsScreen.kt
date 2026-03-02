@@ -3,7 +3,6 @@ package com.prog7313.microtrips.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,13 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.prog7313.microtrips.util.AssetImage
 import com.prog7313.microtrips.viewmodel.DestinationViewModel
 import com.prog7313.microtrips.viewmodel.SettingsViewModel
 
@@ -39,10 +39,9 @@ fun SavedDestinationsScreen(
     onBack: () -> Unit,
     onDestinationClick: (Long) -> Unit,
     destinationVm: DestinationViewModel = viewModel(),
-    settingsVm: SettingsViewModel
+    settingsVm: SettingsViewModel = viewModel()
 ) {
     val savedDestinations by destinationVm.savedDestinations.collectAsStateWithLifecycle()
-    val showBudgetBadges by settingsVm.showBudgetBadges.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -68,66 +67,38 @@ fun SavedDestinationsScreen(
                         .fillMaxWidth()
                         .clickable { onDestinationClick(destination.id) }
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(destination.name, style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(4.dp))
-                        Text(destination.location.area, style = MaterialTheme.typography.bodySmall)
-                        Spacer(Modifier.height(8.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            if (showBudgetBadges) {
-                                InfoCard(
-                                    title = "Price",
-                                    value = "R${"%.2f".format(destination.budget.total.toDouble())}",
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                            InfoCard(
-                                title = "Time",
-                                value = destination.timeNeeded,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            destination.shortDescription,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = 3,
-                            overflow = TextOverflow.Ellipsis
+                    Column {
+                        AssetImage(
+                            imageName = destination.image,
+                            contentDescription = destination.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentScale = ContentScale.Crop
                         )
-                        Spacer(Modifier.height(8.dp))
-                        Text("Tap to see details", style = MaterialTheme.typography.labelSmall)
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(destination.name, style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(4.dp))
+                            Text(destination.location.area, style = MaterialTheme.typography.bodySmall)
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                "R${"%.2f".format(destination.budget.total.toDouble())}",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                destination.shortDescription,
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 3,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text("Tap to see details", style = MaterialTheme.typography.labelSmall)
+                        }
                     }
                 }
             }
-        }
-    }
-}
-@Composable
-private fun InfoCard(
-    title: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
         }
     }
 }

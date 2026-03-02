@@ -83,21 +83,3 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun AssetImage(imageName: String) {
-    val context = LocalContext.current
-    val bitmap = remember(imageName) {
-        context.assets.open("images/$imageName").use { input ->
-            BitmapFactory.decodeStream(input)
-        }
-    }
-
-    Image(
-        bitmap = bitmap.asImageBitmap(),
-        contentDescription = imageName,
-        modifier = Modifier
-            .fillMaxWidth(0.50f)
-            .height(250.dp),
-        contentScale = ContentScale.Fit
-    )
-}

@@ -35,10 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.prog7313.microtrips.util.AssetImage
 import com.prog7313.microtrips.viewmodel.DestinationViewModel
 import com.prog7313.microtrips.viewmodel.SettingsViewModel
 
@@ -152,51 +154,59 @@ fun ViewDestScreen(
                             .fillMaxWidth()
                             .clickable { onDestinationClick(g.id) }
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(g.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                                IconButton(onClick = { if (isSaved) destinationVm.unsaveDestination(g.id) else destinationVm.saveDestination(g.id) }) {
-                                    Icon(
-                                        if (isSaved) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
-                                        contentDescription = "Save"
-                                    )
-                                }
-                            }
-                            Spacer(Modifier.height(4.dp))
-                            Text(g.location.area, style = MaterialTheme.typography.bodySmall)
-                            Spacer(Modifier.height(8.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                if (showBudgetBadges) {
-                                    InfoCard(
-                                        title = "Price",
-                                        value = "R${"%.2f".format(g.budget.total.toDouble())}",
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                }
-                                InfoCard(
-                                    title = "Time",
-                                    value = g.timeNeeded,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                g.shortDescription,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 3,
-                                overflow = TextOverflow.Ellipsis
+                        Column {
+                            AssetImage(
+                                imageName = g.image,
+                                contentDescription = g.name,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(120.dp),
+                                contentScale = ContentScale.Crop
                             )
-                            Spacer(Modifier.height(8.dp))
-                            Text("Tap to see details", style = MaterialTheme.typography.labelSmall)
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(g.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                                    IconButton(onClick = { if (isSaved) destinationVm.unsaveDestination(g.id) else destinationVm.saveDestination(g.id) }) {
+                                        Icon(
+                                            if (isSaved) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
+                                            contentDescription = "Save"
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(4.dp))
+                                Text(g.location.area, style = MaterialTheme.typography.bodySmall)
+                                if (showBudgetBadges) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        InfoCard(
+                                            title = "Price",
+                                            value = "R${"%.2f".format(g.budget.total.toDouble())}",
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        InfoCard(
+                                            title = "Time",
+                                            value = g.timeNeeded,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    g.shortDescription,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                Text("Tap to see details", style = MaterialTheme.typography.labelSmall)
+                            }
                         }
                     }
                 }
