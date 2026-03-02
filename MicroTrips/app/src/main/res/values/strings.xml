@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Micro Trips</string>
+      <string name="title_assets">assets</string>
 </resources>

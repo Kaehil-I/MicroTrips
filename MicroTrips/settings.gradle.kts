@@ -24,4 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Micro Trips"
 include(":app")
- 
